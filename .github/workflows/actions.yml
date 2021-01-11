@@ -1,0 +1,48 @@
+name: cut release branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseNumber:
+        description: Release Number (#)
+        required: true
+      majorVersion:
+        description: New Major Version Number
+        required: true
+        default: 20
+      minorVersion:
+        description: New Minor Version Number
+        required: true
+      patchVersion:
+        description: New Patch Version Number
+        required: true
+
+jobs:
+
+  branch:
+    runs-on:  ubuntu-latest
+    steps:
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Create Release Branch
+        run: |
+          git checkout -b releases/r${{ github.event.inputs.releaseNumber }}
+          git push --set-upstream origin releases/r${{ github.event.inputs.releaseNumber }}
+
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Bump Develop Version
+        run: |
+          semVer=${{ github.event.inputs.majorVersion }}.${{ github.event.inputs.minorVersion }}.${{ github.event.inputs.patchVersion }}
+          echo $semVer > ${{ github.workspace }}/VERSION_BASE
+          git config user.name github-actions
+          git config user.email derek.willingham@outlook.com
+          git add .
+          git commit -m "bump version to $semVer"
+          git push
