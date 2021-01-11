@@ -30,6 +30,7 @@ jobs:
       - name: Create Release Branch
         run: |
           git checkout -b releases/r${{ github.event.inputs.releaseNumber }}
+          echo "This is the ${{github.ref}} branch." > ${{ github.workspace }}/README.md
           git push --set-upstream origin releases/r${{ github.event.inputs.releaseNumber }}
 
       - name: Checkout Develop Branch
