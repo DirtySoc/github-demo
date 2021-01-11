@@ -42,8 +42,9 @@ jobs:
         run: |
           semVer=${{ github.event.inputs.majorVersion }}.${{ github.event.inputs.minorVersion }}.${{ github.event.inputs.patchVersion }}
           echo $semVer > ${{ github.workspace }}/VERSION_BASE
-          git config user.name github-actions
-          git config user.email derek.willingham@outlook.com
-          git add .
-          git commit -m "bump version to $semVer"
-          git push
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: Bump develop version
+          reviewers: DirtySoc
