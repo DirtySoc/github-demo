@@ -47,4 +47,4 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: Bump develop version
-          reviewers: DirtySoc
+          reviewers: ${{ github.actor }}
